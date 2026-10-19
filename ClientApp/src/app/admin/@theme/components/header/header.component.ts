@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
-import { AuthService } from '../../../../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../../core/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -12,22 +12,23 @@ import { CommonModule } from '@angular/common';
   styleUrl: './header.component.css',
 })
 export class HeaderComponent {
-  constructor(public authService: AuthService) {
-  }
-
-  get userName(): string | null {
-    // On récupère les informations de l'utilisateur depuis le ID token, pas l'access token.
-    // L'ID token est destiné au client (Angular), l'access token est pour l'API.
-    const claims = this.authService.getClaimsFromAccessToken() as any;
-    return claims ? claims.name : null;
+  constructor(public authService: AuthService, private readonly router: Router) {
   }
   
-  onLoginClicked()
-  {
-    this.authService.login();
+  login(): void {
+    this.authService.login(this.router.url || '/');
   }
 
-  onLogoutClicked() {
+  logout(): void {
     this.authService.logout();
+  }
+
+  get userName(): string {
+    return this.authService.userName ?? 'Mon compte';
+  }
+
+
+  get role(): string {
+    return this.authService.hasSuperAdminRole ? 'SuperAdmin' : this.authService.hasAdminRole ? 'Admin' : 'User';
   }
 }

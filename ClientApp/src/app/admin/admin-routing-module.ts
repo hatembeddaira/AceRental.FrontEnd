@@ -12,13 +12,13 @@ import { ReservationComponent } from './features/reservation/reservation.compone
 import { DevisComponent } from './features/devis/devis.component';
 import { DevisViewerComponent } from './features/devis/devis-viewer/devis-viewer.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
-import { authGuard } from '../auth.guard';
+import { authGuard } from '../core/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: AdminComponent,
-    // canActivate: [authGuard], 
+    canActivate: [authGuard],
     children: [
       {
         path: '',

@@ -12,6 +12,7 @@ import { ServiceDto } from '../../../../interfaces/service-dto';
 import { ServiceType } from '../../../../Enum/service-type';
 import { ReservationServicesDto } from '../../../../interfaces/reservation-services-dto';
 import { ClientDto } from '../../../../interfaces/client-dto';
+import { AuthService } from '../../../../core/auth.service';
 
 @Component({
   selector: 'app-reservation.component',
@@ -41,7 +42,8 @@ export class BasketComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     route: ActivatedRoute,
-    private _reservationService: ReservationService){
+    private _reservationService: ReservationService,
+    public readonly authService: AuthService){
     this.id = route.snapshot.paramMap.get('id') || 'create';
     this.reservationService = _reservationService;
   }
@@ -137,5 +139,11 @@ export class BasketComponent implements OnInit {
     //   return total + produitReservation.produit.DailyPriceHT * produitReservation.quantite;
     // }, 0);
     // this.reservation.totale = totalPacks + totalProduits;
+  }
+
+  validateOrder(): void {
+    if (!this.authService.isAuthenticated) {
+      this.authService.login('/panier');
+    }
   }
 }

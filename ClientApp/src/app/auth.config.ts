@@ -1,14 +1,15 @@
 import { AuthConfig } from 'angular-oauth2-oidc';
+import { environment } from '../environments/environment';
 
 export const authCodeFlowConfig: AuthConfig = {
-  issuer: 'http://localhost:5001',
-  redirectUri: 'http://localhost:3000',
-  clientId: 'ace-rental-angular',
-  scope: 'openid profile email api',
+  issuer: environment.auth.authority,
+  redirectUri: environment.auth.redirectUri,
+  postLogoutRedirectUri: environment.auth.postLogoutRedirectUri,
+  clientId: environment.auth.clientId,
+  scope: environment.auth.scope,
   responseType: 'code',
-  showDebugInformation: true,
-  useSilentRefresh: true,
-  silentRefreshRedirectUri: 'http://localhost:3000/silent-refresh.html',
-  silentRefreshTimeout: 20000,
+  showDebugInformation: !environment.production,
+  useSilentRefresh: false,
+  silentRefreshRedirectUri: environment.auth.silentRefreshRedirectUri,
   clearHashAfterLogin: true,
 };

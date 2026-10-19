@@ -33,27 +33,24 @@
       </ul>
       <div>
         <ul class="navbar-nav mr-auto">
-          <!-- Si l'utilisateur n'est pas connecté -->
-          <li *ngIf="!authService.isLoggedIn" class="nav-item">
-            <a (click)="onLoginClicked()" class="nav-link" style="cursor: pointer;">
-              Connecter
-            </a>
-          </li>
-
-          <!-- Si l'utilisateur est connecté -->
-          <li *ngIf="authService.isLoggedIn" class="nav-item dropdown">
+          @if (authService.isAuthenticated) {
+          <li class="nav-item dropdown ">
             <a class="nav-link dropdown-toggle" id="navbarUser" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
-              <i class="bi bi-person-fill"></i> {{ userName }}
+              <i class="bi bi-person-fill"></i> {{ userName }} {{ role }}
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarUser">
               <li><a class="dropdown-item" [routerLink]="['/profile']">Profile</a></li>
+              <li><a class="dropdown-item" [routerLink]="['/profile']">Mes réservations</a></li>
               <li>
-                <hr class="dropdown-divider">
+                <hr>
               </li>
-              <li><a (click)="onLogoutClicked()" class="dropdown-item" style="cursor: pointer;">Déconnection</a></li>
+              <li><a class="dropdown-item" (click)="logout()" style="cursor: pointer;">Déconnexion</a></li>
             </ul>
           </li>
+          } @else {
+          <li class="nav-item"><a class="nav-link" (click)="login()" style="cursor: pointer;">Se connecter</a></li>
+          }
         </ul>
       </div>
     </div>

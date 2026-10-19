@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Inject, PLATFORM_ID } from '@angular/core';
 import {FormsModule} from '@angular/forms'
 import { pdfDefaultOptions } from 'ngx-extended-pdf-viewer';
 import {jsPDF} from "jspdf";
 import {autoTable, RowInput, UserOptions} from "jspdf-autotable";
+import { QuoteService } from '../../../../services/quote.service';
+import { ActivatedRoute } from '@angular/router';
+import { BootstrapToastService } from '../../../../services/bootstrap-toast.service';
 
 interface jsPDFWithAutoTable extends jsPDF {
   lastAutoTable?: {
@@ -29,17 +31,17 @@ interface jsPDFWithAutoTable extends jsPDF {
 })
 export class DevisViewerComponent implements OnInit  {
   pdfSrc?: string;
-  id!: number;
+  id!: string;
   isBrowser = false;
-constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  private toastService = inject(BootstrapToastService);
+constructor(private route: ActivatedRoute,@Inject(PLATFORM_ID) private platformId: Object, private quoteService: QuoteService) {
     pdfDefaultOptions.assetsFolder = 'assets/ngx-extended-pdf-viewer';
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
   ngOnInit( ): void {
-    
-    console.log('ID du reservation =', this.id);
-    this.generateDevis();
+    this.id = this.route.snapshot.paramMap.get('id') || '';    
+    console.log('ID du reservation =', this.id);    
   }
 
   drawBoxWithText(doc: jsPDF, x: number, y: number, width: number, height: number, title: string, text: string[])
@@ -57,6 +59,18 @@ constructor(@Inject(PLATFORM_ID) private platformId: Object) {
   }
   generateDevis() 
   {
+    this.quoteService.generateQuote({reservationId: this.id.toString()})
+    .subscribe({
+      next: quote => {
+        console.log(quote);
+      },
+      error: err => {
+        console.error('Erreur loading items', err);
+        const errorMessage = err?.error?.detail || err?.message || 'Erreur lors du chargement des clients';
+        const errorTitle = err?.error?.title || err?.statusText || 'Erreur';
+        this.toastService.error(errorTitle, errorMessage, err.status, 5000);
+      }
+    });
     const headerInfoColumnStyles: UserOptions["columnStyles"] = {
       0: { cellWidth: 20},
       1: { cellWidth: 30},

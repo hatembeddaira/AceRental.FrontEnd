@@ -27,6 +27,25 @@
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['/installation']">Installation</a>
         </li>
+        @if(!authService.isClient) {
+        <li class="nav-item dropdown ">
+          <a class="nav-link dropdown-toggle" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            BackOffice
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+            <li><a class="dropdown-item" [routerLink]="'/admin/services'">Services</a></li>
+            <li><a class="dropdown-item" [routerLink]="'/admin/packs'">Packs</a></li>
+            <li><a class="dropdown-item" [routerLink]="'/admin/equipments'">Equipements</a></li>
+            <li><a class="dropdown-item" [routerLink]="'/admin/clients'">Clients</a></li>
+            <li><a class="dropdown-item" [routerLink]="'/admin/reservations'">Reservations</a></li>
+            <li><a class="dropdown-item" [routerLink]="'/admin/devis'">Devis</a></li>
+            <li><a class="dropdown-item" [routerLink]="'/admin/calendrier'">Calendrier</a></li>
+            <li><a class="dropdown-item" [routerLink]="'/admin/invoices'">Factures</a></li>
+            <li><a class="dropdown-item" [routerLink]="'/admin/installations'">Installations</a></li>
+          </ul>
+        </li>
+        }
       </ul>
       <form class="d-flex">
         <div class="input-group" style="margin-right: 15px;">
@@ -41,10 +60,11 @@
             <a class="nav-link" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
               aria-controls="offcanvasRight"><i class="bi bi-basket-fill"></i> Panier</a>
           </li>
+          @if (authService.isAuthenticated) {
           <li class="nav-item dropdown ">
             <a class="nav-link dropdown-toggle" id="navbarUser" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
-              <i class="bi bi-person-fill"></i> Hatem BEDDAIRA
+              <i class="bi bi-person-fill"></i> {{ userName }}
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarUser">
               <li><a class="dropdown-item" [routerLink]="['/profile']">Profile</a></li>
@@ -52,9 +72,12 @@
               <li>
                 <hr>
               </li>
-              <li><a class="dropdown-item" [routerLink]="'/logout'">Déconnection</a></li>
+              <li><a class="dropdown-item" (click)="logout()" style="cursor: pointer;">Déconnexion</a></li>
             </ul>
           </li>
+          } @else {
+          <li class="nav-item"><a class="nav-link" (click)="login()" style="cursor: pointer;">Se connecter</a></li>
+          }
         </ul>
       </div>
     </div>

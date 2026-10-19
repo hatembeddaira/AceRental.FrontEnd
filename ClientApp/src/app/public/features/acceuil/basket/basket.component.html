@@ -256,7 +256,9 @@
             </div>
             <div class="row" style="margin-top: 10px;">
                 <div class="col-md-6">
-                    <button type="button" class="btn btn-dark effect btn-m">Valider la commande</button>
+                    <button type="button" class="btn btn-dark effect btn-m" (click)="validateOrder()">
+                        {{ authService.isAuthenticated ? 'Valider la commande' : 'Se connecter pour commander' }}
+                    </button>
                 </div> 
                 <div class="col-md-6">
                     <button type="button" class="btn btn-dark effect btn-m">Annuler la commande</button>
